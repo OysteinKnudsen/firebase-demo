@@ -1,22 +1,33 @@
-import logo from './logo.svg';
 import './App.css';
+import { db } from "./firebase"
+import firebase from 'firebase'
+
 
 function App() {
+
+  let correctAnswer = Math.round(Math.random())
+  const coinTossRef = db.collection("guesses").doc('cointoss');
+  
+  const handleGuess = (guess) => {
+    if (guess === correctAnswer)
+    {
+      console.log('Update correct');
+      coinTossRef.update({
+        correct:firebase.firestore.FieldValue.increment(1)
+      })
+    } else {
+      console.log('Update incorrect');
+      coinTossRef.update({
+        incorrect:firebase.firestore.FieldValue.increment(1)
+      })
+    }
+    correctAnswer = Math.round(Math.random())
+  }
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <button value="1" onClick={() => handleGuess(1)}>Kron</button>
+        <button value="0" onClick={() => handleGuess(0)}>Mynt</button>
       </header>
     </div>
   );
